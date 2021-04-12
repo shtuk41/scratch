@@ -1,0 +1,4 @@
+b4 0e -> mov ah, 0x0e
+b0 48 -> mov al, 'H'
+cd 10 -> int 0x10 
+eb ef -> jump ef?

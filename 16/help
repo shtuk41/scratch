@@ -1,0 +1,3 @@
+$od -t x1 -A n bootsect.bin
+qemu-system-i386 boot_sect.bin
+[org 0x7c00] - add this to the beginning of the assembly telling BIOS where to load the program in memory

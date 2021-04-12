@@ -1,0 +1,36 @@
+$od -t x1 -A n bootsect.bin
+qemu-system-i386 boot_sect.bin
+[org 0x7c00] - add this to the beginning of the assembly telling BIOS where to load the program in memory
+
+
+gcc -ffreestanding -c basic.c -o basic.o -m32 -fno-pie
+
+objdump -d basic.o
+
+ld -o basic.bin -Ttext 0x1000 --oformat binary basic.o -m i386pe
+
+ld -V //get list of all available architectures
+
+ndisasm -b 32 basic.bin > basic.dis
+
+qemu-system-x86_64 -blockdev driver=file,node-name=f0,filename=os-image -device floppy,drive=f0
+
+nasm boot_sect.asm -f bin -o boot_sect.bin
+
+
+ld -o kernel.bin -Ttext 0x1000 kernel.o --oformat binary -m i386pep
+--------------------------------------------
+
+
+nasm boot_sect.asm -f bin -o boot_sect.bin
+gcc -ffreestanding -c kernel.c -o kernel.o -m32 -fno-pie
+
+nasm  kernel_entry.asm -f elf -o kernel_entry.o 
+
+ld -o kernel.bin -Ttext 0x1000 kernel_entry.o kernel.o --oformat binary -m elf_i386
+
+objcopy -O binary -j .text  kernel.tmp kernel.bin 
+
+
+
+
